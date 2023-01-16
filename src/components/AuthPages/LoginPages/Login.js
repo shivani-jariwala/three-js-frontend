@@ -28,9 +28,10 @@ const Login = () => {
   useEffect(() => {
     document.title = "Log in"
   }, [])
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(userInformations, dispatch);
+    await login(userInformations,dispatch);
+    history.push('/products')
   };
   return (
     <>

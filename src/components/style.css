@@ -23,7 +23,7 @@ h2 {
 }
 
 .info {
-  margin: 30px 30px 15px 0;
+  margin: 30px 0 15px 0;
   padding: 30px;
 }
 
@@ -80,4 +80,10 @@ h2 {
     padding: 30px;
   }
 
+}
+
+#edit {
+  background-color: #80CED7;
+  padding: 10px;
+  margin-right: 20px;
 }

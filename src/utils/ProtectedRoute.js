@@ -1,13 +1,19 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { Route, useHistory } from "react-router-dom";
 import LoadingScreen from "../components/LoadingScreen";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const history = useHistory();
-  const user = useSelector((state) => state.user);
+  // const user = useSelector((state) => state.user);
+  let user;
+  user.isAuthenticated = true;
+  user.pending =false;
+  
   useEffect(() => {
-    if (!user.isAuthenticated && !user.pending) history.push("/");
+    if (!user.isAuthenticated && !user.pending) {
+      history.push("/")
+    };
   });
 
   return (

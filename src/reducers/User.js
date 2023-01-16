@@ -3,7 +3,7 @@ export const defaultState = {
     isAuthenticated: null,
     pending: true,
     loading: false,
-    token: null,
+    token: localStorage.getItem("token"),
   };
           
   export default function user(state = defaultState, action) {

@@ -4,6 +4,9 @@ export const defaultState = {
     message: "",
     duration: 3000,
     nextRoute: null,
+    appError: {
+      hasError:false
+    }
   };
   
   export default function alert(state = defaultState, action) {
@@ -18,6 +21,9 @@ export const defaultState = {
             ? action.payload.duration
             : initialState.duration,
           nextRoute: action.payload.nextRoute ? action.payload.nextRoute : null,
+          appError: {
+            hasError: true
+          }
         });
       case "CLOSE_ALERT":
         return Object.assign({}, state, {

@@ -21,14 +21,14 @@ import { useEffect } from "react";
 const Register = () => {
   let history = useHistory();
   const dispatch = useDispatch();
-  const { pending } = useSelector((state) => state.user);
+  // const { pending } = useSelector((state) => state.user);
   const [userInformations, setUserInformations] = useState({
     name: "",
-    surname: "",
     email: "",
     password: "",
-    repassword: "",
   });
+
+  const disabled = userInformations.name && userInformations.password && userInformations.email;
 
   useEffect(() => {
     document.title = "Create a Account"
@@ -36,7 +36,8 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await register(userInformations, dispatch);
+    await register(userInformations,dispatch);
+    history.push('/login')
   };
 
   return (
@@ -57,18 +58,6 @@ const Register = () => {
                   setUserInformations({
                     ...userInformations,
                     name: e.target.value,
-                  })
-                }
-              />
-              <Input
-                type="text"
-                placeholder="Enter surname"
-                required
-                value={userInformations.surname}
-                onChange={(e) =>
-                  setUserInformations({
-                    ...userInformations,
-                    surname: e.target.value,
                   })
                 }
               />
@@ -96,24 +85,12 @@ const Register = () => {
                   })
                 }
               />
-              <Input
-                type="password"
-                placeholder="Confirm password"
-                required
-                value={userInformations.repassword}
-                onChange={(e) =>
-                  setUserInformations({
-                    ...userInformations,
-                    repassword: e.target.value,
-                  })
-                }
-              />
               <Text>
                 By signing up, you confirm that you've read and accepted our{" "}
                 <Link fontSize="0.75rem">Terms of Service</Link> and{" "}
                 <Link fontSize="0.75rem">Privacy Policy</Link>.
               </Text>
-              <Button type="submit" disabled={pending}>
+              <Button type="submit" disabled={!disabled}>
                 Complete
               </Button>
               <Hr />

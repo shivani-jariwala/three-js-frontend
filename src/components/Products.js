@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAllProducts as getAllProductsService } from "../services/ProductService";
+import { getAllProducts as getAllProductsService, deleteProduct  } from "../services/ProductService";
 import Item from "./Item";
 
 const exampleProducts = [{
@@ -15,22 +15,27 @@ const exampleProducts = [{
 
 function Products() {
 
-  const [products, setProducts] = useState(exampleProducts);
-
+  const [products, setProducts] = useState([]);
+  
   useEffect(() => {
     getAllProducts()
   }, []);
-
+  
   const getAllProducts = async () => {
     const response = await getAllProductsService();
     setProducts(response.products);
   }
 
+  const removeProduct = async (id) => {
+    await deleteProduct(id);
+    getAllProducts()
+  }
+
   return (
-      <div>
-      {products.map((product) => (
-        <Item key={product.id} {...product} />
-      ))}
+      <div className="d-flex flex-row">
+      {products && products.length > 0  ? products.map((product) => (
+        <Item key={product.id} {...product} removeProduct={removeProduct}/>
+      )) : <div style={{color:'white',fontSize:'48px',paddingTop:'25%',paddingLeft:'35%'}}>No Products Available</div>}
     </div>
   );
 }

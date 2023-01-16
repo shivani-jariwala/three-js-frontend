@@ -7,52 +7,67 @@ import {
     loginFailure,
     openAlert
 } from '../actions/Index'
+import { showError } from "../utils/ErrorHandler";
 import setBearer from "../utils/SetBearer";
-const baseUrl = "http://localhost:3001/user/";
+const baseUrl = "http://localhost:8000";
 
-export const register = async (
-  { name, surname, email, password, repassword },
-  dispatch
-) => {
-  dispatch(registrationStart());
-  if (password !== repassword) {
-    dispatch(
-      openAlert({
-        message: "Your passwords does not match!",
-        severity: "error",
-      })
-    );
-  } else {
-    try {
-      const res = await axios.post(`${baseUrl}register`, {
-        name,
-        surname,
-        email,
-        password,
-      });
-    } catch (error) {
-      dispatch(
-        openAlert({
-          message: error?.response?.data?.errMessage
-            ? error.response.data.errMessage
-            : error.message,
-          severity: "error",
-        })
-      );
-    }
-  }
-  dispatch(registrationEnd());
+export function register({name, email, password},dispatch) {
+    return axios.post(`${baseUrl}/auth/register`, {
+      name,
+      email,
+      password
+    })
+    .then((resp) => {
+      console.log("respinse",resp)
+      const responseBody = resp.data;
+      if (responseBody.message === 'success') {
+        return responseBody;
+      }
+      const err = new Error('Invalid response');
+      err.data = responseBody;
+      showError(err);
+      throw err;
+    })
+    .catch((err) => {
+      showError(err);
+      throw err;
+    });
 };
 
-export const login = async ({ email, password }, dispatch) => {
-  dispatch(loginStart());
-  try {
-    const res = await axios.post(baseUrl + "login", { email, password });
-    const { user } = res.data;
-    localStorage.setItem("token", user.token);
-    setBearer(user.token);
-    dispatch(loginSuccess({ user }));
-  } catch (error) {
-    dispatch(loginFailure());
-  }
-};
+
+// export const login = async ({ email, password }, dispatch) => {
+//   dispatch(loginStart());
+//   try {
+//     const res = await axios.post(baseUrl + "login", { email, password });
+//     const { user } = res.data;
+//     localStorage.setItem("token", user.token);
+//     setBearer(user.token);
+//     dispatch(loginSuccess({ user }));
+//   } catch (error) {
+//     dispatch(loginFailure());
+//   }
+// };
+export function login({email,password},dispatch) {
+  return axios
+    .post(`${baseUrl}/auth/login`, {
+      email,
+      password
+    })
+    .then((resp) => {
+      const responseBody = resp.data;
+      localStorage.setItem("token", responseBody.user.token);
+      setBearer(responseBody.user.token);
+      if (responseBody.message === 'success') {
+        return responseBody;
+      }
+      const err = new Error('Invalid response');
+      err.data = responseBody;
+      showError(err);
+      throw err;
+    })
+    .catch((err) => {
+      localStorage.removeItem("token")
+      showError(err);
+      throw err;
+    });
+}

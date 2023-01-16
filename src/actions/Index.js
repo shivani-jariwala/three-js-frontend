@@ -7,6 +7,24 @@ function action(payload) {
 }
 */
 
+export function showError(errorTitle, errorDesc) {
+  return {
+    type: "SHOW_ERROR",
+    payload: {
+      hasError: true,
+      errorTitle,
+      errorDesc,
+    },
+  };
+}
+
+export function hideError() {
+  return {
+    type: "HIDE_ERROR",
+    payload: null,
+  };
+}
+
 export function registrationStart() {
     return {
       type: "REGISTRATION_START",
@@ -50,7 +68,7 @@ export function registrationStart() {
       payload: info,
     };
   }
-   
+
   export function openAlert(info) {
     return {
       type: "OPEN_ALERT",
@@ -58,13 +76,10 @@ export function registrationStart() {
     };
   }
 
-  export function closeAlert() {
+  export function closeAlert(info) {
     return {
       type: "CLOSE_ALERT",
-      payload: null,
+      payload: info,
     };
   }
-
-  
-  
-  
+   
